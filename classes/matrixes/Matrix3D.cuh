@@ -19,7 +19,7 @@ namespace coreutils {
 
                float* getData (int length, int width, int height);
 
-               int getIndex (int l, int w, int h);
+               int getIndex (int l, int w, int h) const;
 
                // shuffles every single value
                void shuffleEvery ();
@@ -51,9 +51,11 @@ namespace coreutils {
 					// returns division of this and another matrix
                Matrix3D* operator / (const Matrix3D* m2);
 
-					bool equals (const Matrix3D* m2);
+					bool equals (const Matrix3D* m2, double tolerance = 0.001);
 
                void randomize (double lowerBound = -0.5, double upperBound = 0.5);
+
+					void xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2);
 
                double dotProduct (const Matrix3D* m2);
 
@@ -61,7 +63,7 @@ namespace coreutils {
 
                void insert (float data, int length, int width, int height);
 
-               void printMatrix ();
+               void printMatrix () const;
 
                void setMatrix (Matrix3D* M3D);
 

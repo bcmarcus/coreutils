@@ -41,7 +41,7 @@ float* Matrix3D::getData (int length, int width, int height) {
 	return &this->arr[getIndex(length, width, height)];
 }
 
-int Matrix3D::getIndex (int l, int w, int h) {
+int Matrix3D::getIndex (int l, int w, int h) const {
 	return l * this->width * this->height + w * this->height + h;
 }
 
@@ -191,11 +191,11 @@ Matrix3D* Matrix3D::operator / (const Matrix3D* m2) {
 	return M3D;
 }
 
-bool Matrix3D::equals (const Matrix3D* m2) {
+bool Matrix3D::equals (const Matrix3D* m2, double tolerance) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
-				if (m2->arr[getIndex(i, j, k)] != this->arr [getIndex(i, j, k)]) {
+				if (m2->arr[getIndex(i, j, k)] - this->arr [getIndex(i, j, k)] > tolerance) {
 					return false;
 				}
 			}
@@ -216,6 +216,12 @@ void Matrix3D::randomize (double lowerBound, double upperBound) {
 			}
 		}
 	}
+}
+
+void Matrix3D::xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2) {
+	double currentRandomNumber;
+	double bound = sqrt(6) / (sqrt(l1 * w1 * h1 + l2 * w2 * h2));
+	this->randomize(-bound, bound);
 }
 
 double Matrix3D::dotProduct (const Matrix3D* m2) {
@@ -251,7 +257,7 @@ void Matrix3D::insert (float data, int length, int width, int height) {
 	this->arr[getIndex(length, width, height)] = data;
 }
 
-void Matrix3D::printMatrix () {
+void Matrix3D::printMatrix () const {
 	std::cout << '\n' << "{";
 	for (int i = 0; i < this->length; i++) {
 		std::cout << '\n' << "  {" << '\n';
@@ -313,7 +319,7 @@ Matrix3D::Matrix3D (const Matrix3D &m3d) {
 	this->width = m3d.width;
 	this->height = m3d.height;
 	gpuErrchk(cudaMallocHost((void **) &this->arr, length * width * height * sizeof(float)));
-	gpuErrchk(cudaMemcpy(this->arr, m3d.arr, length * width * height * sizeof(float), cudaMemcpyHostToHost));
+	gpuErrchk(cudaMemcpy(this->arr, m3d.arr, this->length * this->width * this->height * sizeof(float), cudaMemcpyHostToHost));
 	this->memorySize = length * width * height * sizeof(float);
 }
 

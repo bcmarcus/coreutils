@@ -1,9 +1,9 @@
-#ifndef SORTHELPERS
-#define SORTHELPERS
-
 #include <iostream>
 #include <string>
+#include <random>
+#include <coreutils/util/time.hpp>
 #include <unistd.h>
+#include <coreutils/functions/sort/sortHelpers.hpp>
 #include <coreutils/functions/math/simpleMath.hpp>
 
 using namespace coreutils::functions;
@@ -22,8 +22,10 @@ namespace coreutils
 
          template <typename T>
          void shuffle (T* arr, int size) {
+				srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
             for (int i = 0; i < size; i++) {
-               coreutils::functions::sort::swap (&arr[i], &arr[(int) math::rand(0, size - 1)]);
+					double currentRandomNumber = ((double) rand() / RAND_MAX * size);
+               coreutils::functions::sort::swap (&arr[i], &arr[(int) currentRandomNumber]);
             }
          }
 
@@ -36,5 +38,3 @@ namespace coreutils
       }
    }
 }
-
-#endif
