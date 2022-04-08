@@ -1,8 +1,12 @@
-#ifndef TIME_HPP
-#define TIME_HPP
+#ifndef TIME
+#define TIME
 
-#include <iostream>
+#include <sys/time.h>
 
-struct timeval GetTimeStamp();
+inline struct timeval GetTimeStamp() {
+	struct timeval tv;
+   gettimeofday(&tv,__null);
+   return tv;
+}
 
 #endif

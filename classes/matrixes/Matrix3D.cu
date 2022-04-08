@@ -2,13 +2,15 @@
 #include <random>
 #include <cmath>
 
+
 #include <coreutils/classes/matrixes/Matrix3D.cuh>
+
+#include <coreutils/functions/debug/print.hpp>
+#include <coreutils/functions/sort/sortHelpers.hpp>
+#include <coreutils/functions/math/simpleMath.hpp>
 
 #include <coreutils/util/time.hpp>
 #include <coreutils/util/cudaErrors.cuh>
-#include <coreutils/functions/debug/print.cpp>
-#include <coreutils/functions/sort/sortHelpers.cpp>
-#include <coreutils/functions/math/simpleMath.hpp>
 
 using namespace coreutils::functions;
 using namespace coreutils::classes::matrixes;
@@ -45,7 +47,6 @@ int Matrix3D::getIndex (int l, int w, int h) const {
 	return l * this->width * this->height + w * this->height + h;
 }
 
-// shuffles every single value
 void Matrix3D::shuffleEvery () {
 	srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
 	for (int length = 0; length < this->length; length++) {
@@ -60,11 +61,9 @@ void Matrix3D::shuffleEvery () {
 }
 
 
-// shuffles every 2d matrix. while retaining the 2d matrix
 int* Matrix3D::shuffleGroups () {
 	int* order = new int[this->length];
 	for (int length = 0; length < this->length; length++) {
-		// int randomLength = (int) math::rand(0, this->length - 1);
 		srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
 		double randomLength = rand() / RAND_MAX * length;
 		order[length] = randomLength;
@@ -91,10 +90,6 @@ void Matrix3D::shuffleGroups (int* order) {
 	}
 }
 
-// -- -- //
-
-// adds this and another matrix and 
-// sets this matrix equal to it
 void Matrix3D::operator += (const Matrix3D* m2) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -105,8 +100,6 @@ void Matrix3D::operator += (const Matrix3D* m2) {
 	}
 }
 
-// subtracts this and another matrix and 
-// sets this matrix equal to it 
 void Matrix3D::operator -= (const Matrix3D* m2) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -117,8 +110,6 @@ void Matrix3D::operator -= (const Matrix3D* m2) {
 	}
 }
 
-
-// returns addition of this and another matrix
 Matrix3D* Matrix3D::operator + (const Matrix3D* m2) {
 	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
 
@@ -133,7 +124,6 @@ Matrix3D* Matrix3D::operator + (const Matrix3D* m2) {
 	return M3D;
 }
 
-// returns subtraction of this and another matrix
 Matrix3D* Matrix3D::operator - (const Matrix3D* m2) {
 	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
 
@@ -148,7 +138,6 @@ Matrix3D* Matrix3D::operator - (const Matrix3D* m2) {
 	return M3D;
 }
 
-// returns multiplication of this and another matrix
 Matrix3D* Matrix3D::operator * (const Matrix3D* m2) {
 	Matrix3D* M3D = new Matrix3D(this->length, this->width, this->height);
 
@@ -219,7 +208,6 @@ void Matrix3D::randomize (double lowerBound, double upperBound) {
 }
 
 void Matrix3D::xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2) {
-	double currentRandomNumber;
 	double bound = sqrt(6) / (sqrt(l1 * w1 * h1 + l2 * w2 * h2));
 	this->randomize(-bound, bound);
 }
@@ -253,7 +241,6 @@ double Matrix3D::sum () {
 }
 
 void Matrix3D::insert (float data, int length, int width, int height) {
-	// printf("[%d][%d][%d] should be %d but is %d\n", length, width, height, length * this->width * this->height + width * this->height + height, getIndex(length, width, height));
 	this->arr[getIndex(length, width, height)] = data;
 }
 
@@ -294,23 +281,11 @@ void Matrix3D::setAll (double x) {
 	}
 }
 
-// Matrix3D findAndMakeMatrix (std::ifstream in) {
-//    std::string line;
-//    int length = 0;
-//    int width = 0;
-//    int height = 0;
-//    while (getline (in, line)) {
-//       // if ()
-//    }
-// }
-
 Matrix3D::Matrix3D (const int length, const int width, const int height) {
-	// std::cout << "Constructor\n";
 	this->length = length;
 	this->width = width;
 	this->height = height;
 	gpuErrchk(cudaMallocHost((void **) &this->arr, length * width * height * sizeof(float)));
-	// this->arr = new float [length * width * height];
 	this->memorySize = length * width * height * sizeof(float);
 }
 
@@ -324,7 +299,6 @@ Matrix3D::Matrix3D (const Matrix3D &m3d) {
 }
 
 Matrix3D::Matrix3D () {
-	// std::cout << "Constructor\n";
 	this->length = 0;
 	this->width = 0;
 	this->height = 0;

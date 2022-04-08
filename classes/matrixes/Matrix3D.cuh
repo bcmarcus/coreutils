@@ -1,10 +1,17 @@
-#ifndef MATRIX3D_HPP
-#define MATRIX3D_HPP
+#ifndef MATRIX3D_CUH
+#define MATRIX3D_CUH
 
 namespace coreutils {
    namespace classes {
       namespace matrixes {
          class Matrix3D{
+				private:
+               int length;
+               int width;
+               int height;
+               long long memorySize;
+               float* arr;
+
             public:
 
                int getLength ();
@@ -74,15 +81,6 @@ namespace coreutils {
                Matrix3D ();
 
                ~Matrix3D ();
-					
-				private:
-               // length is first, then width, then height
-               int length;
-               int width;
-               int height;
-               long long memorySize;
-               float* arr;
-
          };
       }
    }
