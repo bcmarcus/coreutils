@@ -3,7 +3,7 @@
 #include <cmath>
 
 
-#include <coreutils/classes/matrixes/Matrix3D.cuh>
+#include <coreutils/classes/matrixes/Tensor.cuh>
 
 #include <coreutils/functions/debug/print.hpp>
 #include <coreutils/functions/sort/sortHelpers.hpp>
@@ -15,27 +15,27 @@
 using namespace coreutils::functions;
 using namespace coreutils::classes::matrixes;
 
-int Matrix3D::getLength () {
+int Tensor::getLength () {
 	return this->length;
 }
 
-int Matrix3D::getWidth () {
+int Tensor::getWidth () {
 	return this->width;
 }
 
-int Matrix3D::getHeight () {
+int Tensor::getHeight () {
 	return this->height;
 }
 
-float* Matrix3D::getArr () {
+float* Tensor::getArr () {
 	return arr;
 }
 
-long long Matrix3D::getSize () {
+long long Tensor::getSize () {
 	return memorySize;
 }
 
-float* Matrix3D::getData (int length, int width, int height) {
+float* Tensor::getData (int length, int width, int height) {
 	if (this->length <= length || this->width <= width || this->height <= height) {
 		std::cout << "Invalid input at getData";
 		return nullptr;
@@ -43,11 +43,11 @@ float* Matrix3D::getData (int length, int width, int height) {
 	return &this->arr[getIndex(length, width, height)];
 }
 
-int Matrix3D::getIndex (int l, int w, int h) const {
+int Tensor::getIndex (int l, int w, int h) const {
 	return l * this->width * this->height + w * this->height + h;
 }
 
-void Matrix3D::shuffleEvery () {
+void Tensor::shuffleEvery () {
 	srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
 	for (int length = 0; length < this->length; length++) {
 		for (int width = 0; width < this->width; width++) {
@@ -61,7 +61,7 @@ void Matrix3D::shuffleEvery () {
 }
 
 
-int* Matrix3D::shuffleGroups () {
+int* Tensor::shuffleGroups () {
 	int* order = new int[this->length];
 	for (int length = 0; length < this->length; length++) {
 		srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
@@ -78,7 +78,7 @@ int* Matrix3D::shuffleGroups () {
 	return order;
 }
 
-void Matrix3D::shuffleGroups (int* order) {
+void Tensor::shuffleGroups (int* order) {
 	for (int length = 0; length < this->length; length++) {
 		for (int width = 0; width < this->width; width++) {
 			for (int height = 0; height < this->height; height++) {
@@ -90,7 +90,7 @@ void Matrix3D::shuffleGroups (int* order) {
 	}
 }
 
-void Matrix3D::operator += (const Matrix3D* m2) {
+void Tensor::operator += (const Tensor* m2) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
@@ -100,7 +100,7 @@ void Matrix3D::operator += (const Matrix3D* m2) {
 	}
 }
 
-void Matrix3D::operator -= (const Matrix3D* m2) {
+void Tensor::operator -= (const Tensor* m2) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
@@ -110,8 +110,8 @@ void Matrix3D::operator -= (const Matrix3D* m2) {
 	}
 }
 
-Matrix3D* Matrix3D::operator + (const Matrix3D* m2) {
-	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
+Tensor* Tensor::operator + (const Tensor* m2) {
+	Tensor* M3D = new Tensor (this->length, this->width, this->height);
 
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -124,8 +124,8 @@ Matrix3D* Matrix3D::operator + (const Matrix3D* m2) {
 	return M3D;
 }
 
-Matrix3D* Matrix3D::operator - (const Matrix3D* m2) {
-	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
+Tensor* Tensor::operator - (const Tensor* m2) {
+	Tensor* M3D = new Tensor (this->length, this->width, this->height);
 
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -138,8 +138,8 @@ Matrix3D* Matrix3D::operator - (const Matrix3D* m2) {
 	return M3D;
 }
 
-Matrix3D* Matrix3D::operator * (const Matrix3D* m2) {
-	Matrix3D* M3D = new Matrix3D(this->length, this->width, this->height);
+Tensor* Tensor::operator * (const Tensor* m2) {
+	Tensor* M3D = new Tensor(this->length, this->width, this->height);
 
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -152,8 +152,8 @@ Matrix3D* Matrix3D::operator * (const Matrix3D* m2) {
 	return M3D;
 }
 
-Matrix3D* Matrix3D::operator * (const float x) {
-	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
+Tensor* Tensor::operator * (const float x) {
+	Tensor* M3D = new Tensor (this->length, this->width, this->height);
 
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -166,8 +166,8 @@ Matrix3D* Matrix3D::operator * (const float x) {
 	return M3D;
 }
 
-Matrix3D* Matrix3D::operator / (const Matrix3D* m2) {
-	Matrix3D* M3D = new Matrix3D (this->length, this->width, this->height);
+Tensor* Tensor::operator / (const Tensor* m2) {
+	Tensor* M3D = new Tensor (this->length, this->width, this->height);
 
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
@@ -180,7 +180,7 @@ Matrix3D* Matrix3D::operator / (const Matrix3D* m2) {
 	return M3D;
 }
 
-bool Matrix3D::equals (const Matrix3D* m2, double tolerance) {
+bool Tensor::equals (const Tensor* m2, double tolerance) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
@@ -194,7 +194,7 @@ bool Matrix3D::equals (const Matrix3D* m2, double tolerance) {
 	return true;
 }
 
-void Matrix3D::randomize (double lowerBound, double upperBound) {
+void Tensor::randomize (double lowerBound, double upperBound) {
 	double currentRandomNumber;
 	srand(GetTimeStamp().tv_sec + GetTimeStamp().tv_usec);
 	for (int i = 0; i < this->length; i++) {
@@ -207,12 +207,12 @@ void Matrix3D::randomize (double lowerBound, double upperBound) {
 	}
 }
 
-void Matrix3D::xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2) {
+void Tensor::xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2) {
 	double bound = sqrt(6) / (sqrt(l1 * w1 * h1 + l2 * w2 * h2));
 	this->randomize(-bound, bound);
 }
 
-double Matrix3D::dotProduct (const Matrix3D* m2) {
+double Tensor::dotProduct (const Tensor* m2) {
 	double output = 0;
 	
 	for (int i = 0; i < length; i++) {
@@ -226,7 +226,7 @@ double Matrix3D::dotProduct (const Matrix3D* m2) {
 	return output;
 }
 
-double Matrix3D::sum () {
+double Tensor::sum () {
 	double output = 0;
 	
 	for (int i = 0; i < length; i++) {
@@ -240,11 +240,11 @@ double Matrix3D::sum () {
 	return output;
 }
 
-void Matrix3D::insert (float data, int length, int width, int height) {
+void Tensor::insert (float data, int length, int width, int height) {
 	this->arr[getIndex(length, width, height)] = data;
 }
 
-void Matrix3D::printMatrix () const {
+void Tensor::printMatrix () const {
 	std::cout << '\n' << "{";
 	for (int i = 0; i < this->length; i++) {
 		std::cout << '\n' << "  {" << '\n';
@@ -261,7 +261,7 @@ void Matrix3D::printMatrix () const {
 	std::cout << '\n' << "}" << '\n';
 }
 
-void Matrix3D::setMatrix (Matrix3D* M3D) {
+void Tensor::setMatrix (Tensor* M3D) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
@@ -271,7 +271,7 @@ void Matrix3D::setMatrix (Matrix3D* M3D) {
 	}
 }
 
-void Matrix3D::setAll (double x) {
+void Tensor::setAll (double x) {
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			for (int k = 0; k < height; k++) {
@@ -281,7 +281,7 @@ void Matrix3D::setAll (double x) {
 	}
 }
 
-Matrix3D::Matrix3D (const int length, const int width, const int height) {
+Tensor::Tensor (const int length, const int width, const int height) {
 	this->length = length;
 	this->width = width;
 	this->height = height;
@@ -289,7 +289,7 @@ Matrix3D::Matrix3D (const int length, const int width, const int height) {
 	this->memorySize = length * width * height * sizeof(float);
 }
 
-Matrix3D::Matrix3D (const Matrix3D &m3d) {
+Tensor::Tensor (const Tensor &m3d) {
 	this->length = m3d.length;
 	this->width = m3d.width;
 	this->height = m3d.height;
@@ -298,7 +298,7 @@ Matrix3D::Matrix3D (const Matrix3D &m3d) {
 	this->memorySize = length * width * height * sizeof(float);
 }
 
-Matrix3D::Matrix3D () {
+Tensor::Tensor () {
 	this->length = 0;
 	this->width = 0;
 	this->height = 0;
@@ -306,6 +306,6 @@ Matrix3D::Matrix3D () {
 	this->memorySize = 0;
 }
 
-Matrix3D::~Matrix3D () {
+Tensor::~Tensor () {
 	cudaFreeHost(this->arr);
 }

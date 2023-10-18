@@ -1,10 +1,10 @@
-#ifndef MATRIX3D_CUH
-#define MATRIX3D_CUH
+#ifndef Tensor_CUH
+#define Tensor_CUH
 
 namespace coreutils {
    namespace classes {
       namespace matrixes {
-         class Matrix3D{
+         class Tensor{
 				private:
                int length;
                int width;
@@ -37,34 +37,34 @@ namespace coreutils {
 
                // adds this and another matrix and 
                // sets this matrix equal to it
-               void operator += (const Matrix3D* m2);
+               void operator += (const Tensor* m2);
 
                // subtracts this and another matrix and 
                // sets this matrix equal to it 
-               void operator -= (const Matrix3D* m2);
+               void operator -= (const Tensor* m2);
 
                // returns addition of this and another matrix
-               Matrix3D* operator + (const Matrix3D* m2);
+               Tensor* operator + (const Tensor* m2);
 
                // returns subtraction of this and another matrix
-               Matrix3D* operator - (const Matrix3D* m2);
+               Tensor* operator - (const Tensor* m2);
 
                // returns multiplication of this and another matrix
-               Matrix3D* operator * (const Matrix3D* m2);
+               Tensor* operator * (const Tensor* m2);
 					
 					// returns this matrix scaled by a value
-               Matrix3D* operator * (const float x);
+               Tensor* operator * (const float x);
 
 					// returns division of this and another matrix
-               Matrix3D* operator / (const Matrix3D* m2);
+               Tensor* operator / (const Tensor* m2);
 
-					bool equals (const Matrix3D* m2, double tolerance = 0.001);
+					bool equals (const Tensor* m2, double tolerance = 0.001);
 
                void randomize (double lowerBound = -0.5, double upperBound = 0.5);
 
 					void xavierRandomize (int l1, int w1, int h1, int l2, int w2, int h2);
 
-               double dotProduct (const Matrix3D* m2);
+               double dotProduct (const Tensor* m2);
 
                double sum ();
 
@@ -72,15 +72,15 @@ namespace coreutils {
 
                void printMatrix () const;
 
-               void setMatrix (Matrix3D* M3D);
+               void setMatrix (Tensor* M3D);
 
 					void setAll (double x);
 
-               Matrix3D (const int length, const int width, const int height);
-					Matrix3D (const Matrix3D& m3d);
-               Matrix3D ();
+               Tensor (const int length, const int width, const int height);
+					Tensor (const Tensor& m3d);
+               Tensor ();
 
-               ~Matrix3D ();
+               ~Tensor ();
          };
       }
    }
